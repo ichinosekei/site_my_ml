@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+
+     /*Вариант 1: Градиентный фон */
+    /*background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
+
+    /* Вариант 2: Фон с изображением (раскомментируйте нижеследующий блок и закомментируйте градиент)   */
+    background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+    background-size: cover;
+    /**!*/
+}
+
+.chat-container {
+    width: 500px;
+    margin: 50px auto;
+    border: 1px solid #ccc;
+
+    /* Фон чата - белый с небольшой прозрачностью для смягчения визуального контакта с фоном сайта */
+    background-color: rgba(255, 255, 255, 0.9);
+
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+
+    /* Добавляем небольшую тень для объёма */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #e9e9e9;
+}
+
+#clear-chat {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#clear-chat:hover {
+    background-color: #c82333;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+}
+
+.chat-message.user {
+    text-align: right;
+    color: blue;
+}
+
+.chat-message.model {
+    text-align: left;
+    color: green;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: 10px;
+}
+
+#chat-form {
+    display: flex;
+    border-top: 1px solid #ccc;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    font-size: 1em;
+}
+
+#chat-form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+#chat-form button:hover {
+    background-color: #0056b3;
+}

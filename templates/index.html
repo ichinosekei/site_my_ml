@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат с моделью</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>Чат с моделью</h2>
+        <button id="clear-chat">Очистить чат</button>
+    </div>
+    <div id="chat-box" class="chat-box"></div>
+    <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Введите сообщение..." autocomplete="off" required>
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
