@@ -4,11 +4,9 @@ document.getElementById('chat-form').addEventListener('submit', async (e) => {
     const message = inputField.value.trim();
     if (message === '') return;
 
-    // Отображаем сообщение пользователя
     addMessage(message, 'user');
     inputField.value = '';
 
-    // Отображаем индикатор загрузки
     const loadingMessageId = addLoadingIndicator();
 
     try {
@@ -20,9 +18,9 @@ document.getElementById('chat-form').addEventListener('submit', async (e) => {
             body: JSON.stringify({ message })
         });
         const data = await response.json();
-        // Убираем индикатор загрузки
+
         removeLoadingIndicator(loadingMessageId);
-        // Отображаем ответ модели
+
         addMessage(data.response, 'model');
     } catch (error) {
         console.error('Ошибка:', error);
@@ -31,7 +29,6 @@ document.getElementById('chat-form').addEventListener('submit', async (e) => {
     }
 });
 
-// Кнопка "Очистить чат"
 document.getElementById('clear-chat').addEventListener('click', () => {
     const chatBox = document.getElementById('chat-box');
     chatBox.innerHTML = '';
@@ -42,7 +39,6 @@ function addMessage(text, sender) {
     const messageElem = document.createElement('div');
     messageElem.classList.add('chat-message', sender);
 
-    // Получаем текущее время
     const timestamp = new Date().toLocaleTimeString();
     messageElem.innerHTML = `<span class="message-text">${text}</span><span class="timestamp">${timestamp}</span>`;
 
