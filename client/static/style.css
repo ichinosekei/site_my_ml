@@ -10,16 +10,13 @@ body {
 }
 
 .chat-container {
-    width: 80vh;
-    min-width: 400px;
-    height: 80vh;
-    min-height: 400px;
+    width: min(90vw, 600px);
+    height: min(80vh, 700px);
 
     margin: 5vh auto;
 
-    background: rgba(255,255,255,.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,.25);
+    border: 1px solid rgba(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 0.9);
 
     display: flex;
     flex-direction: column;
@@ -326,4 +323,26 @@ body {
     fill: none;
     stroke: gold;
     stroke-width: 4;
+}
+
+@media (max-width: 480px) {
+    .chat-container {
+        width: 95vw;
+        height: auto;
+        min-height: 80vh;
+        margin: 2vh auto;
+    }
+
+    .chat-box {
+        padding: 10px;
+    }
+
+    #user-input {
+        font-size: 0.9em;
+    }
+
+    #chat-form button {
+        padding: 8px 14px;
+        font-size: 0.9em;
+    }
 }

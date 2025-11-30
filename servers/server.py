@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import gemini
-# app = Flask(__name__)
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__, template_folder="../client/templates", static_folder="../client/static")
 @app.route('/')
 def index():
