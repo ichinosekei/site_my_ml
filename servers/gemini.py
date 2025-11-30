@@ -1,7 +1,7 @@
 import requests
 import json
 
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = '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'
 
 def gemini(question):
     response = requests.post(
@@ -12,7 +12,7 @@ def gemini(question):
             "X-Title": "<YOUR_SITE_NAME>",
         },
         data=json.dumps({
-            "model": "google/gemini-2.0-flash-001",  # Optional
+            "model": "google/gemini-2.0-flash-001",
             "messages": [
                 {
                     "role": "user",
