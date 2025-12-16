@@ -10,4 +10,4 @@ COPY . .
 EXPOSE 5000
 
 
-CMD ["gunicorn", "-w", "2", "-k", "gthread", "--threads", "4", "-b", "0.0.0.0:5000", "servers.server:app"]
+CMD ["sh", "-c", "gunicorn -w 2 -k gthread --threads 4 -b 0.0.0.0:${PORT:-5000} servers.server:app"]
