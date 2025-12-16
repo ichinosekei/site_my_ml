@@ -1,5 +1,7 @@
 import os
 import logging
+import time
+
 import requests
 
 
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 MAX_QUESTION_LEN = 200
-
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3-nano-30b-a3b:free")
 
 def gemini(question: str) -> str:
     api_key = os.getenv("OPENROUTER_API_KEY")
@@ -52,7 +54,7 @@ def gemini(question: str) -> str:
     }
 
     payload = {
-        "model": "google/gemini-2.0-flash-exp:free",
+        "model": OPENROUTER_MODEL,
         "messages": [
             {
                 "role": "user",
@@ -74,10 +76,27 @@ def gemini(question: str) -> str:
 
         return answer
 
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к OpenRouter: {e}")
-        return "Не удалось получить ответ от модели она бесплатная так что могут быть проблемы. Попробуйте позже."
 
-    except (KeyError, IndexError, TypeError) as e:
-        logger.error(f"Неожиданный формат ответа модели: {e}; raw response: {response.text if 'response' in locals() else 'нет'}")
-        return "Модель вернула неожиданный ответ. Попробуйте переформулировать вопрос."
+    except requests.exceptions.HTTPError as e:
+        status = e.response.status_code if e.response is not None else None
+        body = e.response.text if e.response is not None else ""
+        logger.warning(f"OpenRouter HTTP {status}: {body[:500]}")
+        if status == 429:
+            logger.warning("429: ждем 2 сек и пробуем еще раз")
+            time.sleep(2)
+            r2 = requests.post(url, headers=headers, json=payload, timeout=30)
+            if r2.status_code == 200:
+                data = r2.json()
+                return data["choices"][0]["message"]["content"]
+            return "429 Too Many Requests: подожди 10–30 секунд и попробуй ещё раз."
+        if status == 401:
+            return "401 Unauthorized: OPENROUTER_API_KEY."
+        return f"Ошибка OpenRouter (HTTP {status}). Попробуйте позже."
+
+    except requests.exceptions.Timeout:
+        logger.error("Timeout при запросе к OpenRouter")
+        return "Таймаут: сервис ИИ отвечает слишком долго. Попробуйте позже."
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Сетевая ошибка при запросе к OpenRouter: {e}")
+        return "Сетевая ошибка при обращении к сервису ИИ. Попробуйте позже."

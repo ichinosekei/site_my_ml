@@ -7,7 +7,7 @@ document.body.style.background =
 const bar   = document.getElementById('timerBar');
 const cdTxt = document.getElementById('countDownTxt');
 const target = new Date('2026-01-01T00:00:00+03:00');
-
+let isSending = false;
 
 const galPopup = document.getElementById('galPopup');
 const thumbs   = [...document.querySelectorAll('.thumb')];
@@ -16,21 +16,23 @@ const bigImg   = document.getElementById('bigImg');
 const prevBtn  = document.getElementById('prevBtn');
 const nextBtn  = document.getElementById('nextBtn');
 
-const formPop = document.getElementById('formPopup');
-const openBtn = document.getElementById('openFormBtn');
-const closeBtn = document.getElementById('formClose');
-const feedForm = document.getElementById('feedForm');
-const sendBtn  = document.getElementById('sendBtn');
-
 
 
 document.getElementById('galClose').addEventListener('click', closePop);
 
 document.getElementById('chat-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (isSending) return;
+
     const inputField = document.getElementById('user-input');
     const message = inputField.value.trim();
     if (message === '') return;
+
+    const sendBtn = document.querySelector('#chat-form button[type="submit"]');
+
+    isSending = true;
+    inputField.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
 
     addMessage(message, 'user');
     inputField.value = '';
@@ -40,22 +42,25 @@ document.getElementById('chat-form').addEventListener('submit', async (e) => {
     try {
         const response = await fetch('/api/chat', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })
         });
+
         const data = await response.json();
-
         removeLoadingIndicator(loadingMessageId);
-
-        addMessage(data.response, 'model');
+        addMessage(data.response ?? 'Пустой ответ от сервера', 'model');
     } catch (error) {
         console.error('Ошибка:', error);
         removeLoadingIndicator(loadingMessageId);
         addMessage('Ошибка при получении ответа от сервера', 'model');
+    } finally {
+        isSending = false;
+        inputField.disabled = false;
+        if (sendBtn) sendBtn.disabled = false;
+        inputField.focus();
     }
 });
+
 
 document.getElementById('clear-chat').addEventListener('click', () => {
     const chatBox = document.getElementById('chat-box');
@@ -173,92 +178,6 @@ function showImg(){
     prevBtn.disabled = cur===0;
     nextBtn.disabled = cur===thumbs.length-1;
 }
-
-
-
-function resetForm() {
-    feedForm.reset();
-    sendBtn.classList.remove('sending', 'done');
-    sendBtn.textContent = 'Отправить';
-    sendBtn.disabled = false;
-}
-
-
-openBtn.addEventListener('click', () => {
-    resetForm();
-    formPop.classList.add('show');
-});
-
-closeBtn.addEventListener('click', () => formPop.classList.remove('show'));
-
-
-feedForm.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    const tel  = feedForm.tel.value.trim();
-    const mail = feedForm.mail.value.trim();
-    const txt  = feedForm.text.value.trim();
-
-
-    const okTel  = /^\+?\d{10,15}$/.test(tel);
-    const okMail = /^[\w.-]+@[\w.-]+\.\w{2,}$/.test(mail);
-    const okTxt  = /^[A-Za-zА-Яа-яЁё0-9\s.,!?]+$/.test(txt);
-
-    if (!(okTel)) {
-        alert('Проверьте ввод: телефон');
-        return;
-    }
-
-    if (!(okMail)) {
-        alert('Проверьте ввод: e-mail');
-        return;
-    }
-    if (!(okTxt)) {
-        alert('Проверьте ввод: текст (только RU/EN и цифры).');
-        return;
-    }
-
-
-    sendBtn.classList.add('sending');
-
-    sendBtn.textContent = 'Отправляем…';
-    sendBtn.disabled = true;
-    await new Promise(resolve => setTimeout(resolve, 50));
-    try {
-        await fetch('/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tel, mail, txt })
-        });
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        sendBtn.classList.remove('sending');
-
-        sendBtn.classList.add('done');
-        sendBtn.textContent = 'Успешно отправлено';
-    } catch (err) {
-        alert('Ошибка отправки, попробуйте позже.');
-        sendBtn.classList.remove('sending');
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Отправить';
-    }
-});
-
-
-
-const helloPop   = document.getElementById('helloPop');
-const helloClose = document.getElementById('helloClose');
-
-if (!localStorage.getItem('helloClosed')) {
-    setTimeout(() => helloPop.classList.add('show'), 30_000);
-}
-
-helloClose.addEventListener('click', () => {
-    helloPop.classList.remove('show');
-    localStorage.setItem('helloClosed', '1');
-});
-
-
 
 const decor = document.getElementById('decor');
 

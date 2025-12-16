@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Документация — site_ml</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px; }
+    code, pre { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+    pre { padding: 12px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Документация проекта site_ml</h1>
+
+  <h2>Что это</h2>
+  <p>Веб-чат: клиент (браузер) отправляет запрос на backend Flask, backend обращается к OpenRouter (Llama) и возвращает ответ.</p>
+
+  <h2>Сетевое взаимодействие</h2>
+  <ul>
+    <li>Клиент → сервер: HTTP POST <code>/api/chat</code></li>
+    <li>Сервер → OpenRouter: HTTPS POST <code>https://openrouter.ai/api/v1/chat/completions</code></li>
+  </ul>
+
+  <h2>Запуск локально</h2>
+  <pre>pip install -r requirements.txt
+# создать .env в корне:
+# OPENROUTER_API_KEY=...
+python servers/server.py</pre>
+
+  <h2>Запуск в Docker</h2>
+  <pre>docker build -t site_ml .
+docker run --rm -p 5000:5000 --env-file .env site_ml</pre>
+
+  <h2>Безопасность</h2>
+  <ul>
+    <li>Ключ API хранится в переменной окружения (<code>.env</code> не коммитится)</li>
+    <li>Ограничение длины входного сообщения</li>
+    <li>Обработка сетевых ошибок (например, 429 Too Many Requests)</li>
+  </ul>
+</body>
+</html>
