@@ -1,10 +1,10 @@
 
 const DEFAULT_BG = '../static/image/background_pic1.png';
-const savedBg     = localStorage.getItem('siteBg');
+const savedBg = localStorage.getItem('siteBg');
 document.body.style.background =
     `url('${savedBg || DEFAULT_BG}') center/cover fixed`;
 
-const bar   = document.getElementById('timerBar');
+const bar = document.getElementById('timerBar');
 const cdTxt = document.getElementById('countDownTxt');
 const target = new Date('2026-01-01T00:00:00+03:00');
 let isSending = false;
@@ -119,7 +119,6 @@ const GAP     = 20;
 const TOP_GAP =  0;
 
 function placeTimer(){
-
     const rawLeft = chatBox.offsetLeft + chatBox.offsetWidth + GAP;
     const rawTop  = chatBox.offsetTop + TOP_GAP;
     bar.style.left = rawLeft + 'px';

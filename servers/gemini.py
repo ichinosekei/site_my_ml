@@ -24,11 +24,7 @@ def gemini(question: str) -> str:
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         logger.error("OPENROUTER_API_KEY не задан.")
-        raise RuntimeError("OPENROUTER_API_KEY не задан. Установи переменную окружения OPENROUTER_API_KEY.")
-
-    if not isinstance(question, str):
-        logger.warning(f"Невалидный тип question: {type(question)}")
-        return "Ошибка: вопрос должен быть текстом."
+        raise RuntimeError("OPENROUTER_API_KEY не задан.")
 
     question = question.strip()
 
@@ -48,7 +44,7 @@ def gemini(question: str) -> str:
 
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://example.com",  # TODO:  URL  сайта
+        "HTTP-Referer": "https://example.com",
         "X-Title": "My ML Study Project",
         "Content-Type": "application/json",
     }
@@ -91,6 +87,8 @@ def gemini(question: str) -> str:
             return "429 Too Many Requests: подожди 10–30 секунд и попробуй ещё раз."
         if status == 401:
             return "401 Unauthorized: OPENROUTER_API_KEY."
+        if status == 403:
+            return "403 Forbidden: сервис отклонил запрос."
         return f"Ошибка OpenRouter (HTTP {status}). Попробуйте позже."
 
     except requests.exceptions.Timeout:
