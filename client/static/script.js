@@ -6,7 +6,7 @@ document.body.style.background =
 
 const bar = document.getElementById('timerBar');
 const cdTxt = document.getElementById('countDownTxt');
-const target = new Date('2026-01-01T00:00:00+03:00');
+const target = new Date('2027-01-01T00:00:00+03:00');
 let isSending = false;
 
 const galPopup = document.getElementById('galPopup');
