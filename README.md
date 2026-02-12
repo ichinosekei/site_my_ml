@@ -1,5 +1,5 @@
 
-# site_my_ml Автор: Лопухов Егор Б13-303
+# site_my_ml 
 
 Веб‑проект с клиент–серверной архитектурой, использующий внешнюю языковую модель через OpenRouter API.  https://sitemyml-production.up.railway.app
 
